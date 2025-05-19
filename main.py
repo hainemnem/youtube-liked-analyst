@@ -2,10 +2,7 @@
 
 import os
 
-from google.oauth2.credentials import Credentials
-
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 # The CLIENT_SECRETS_FILE variable specifies the name of a file that contains
@@ -21,8 +18,8 @@ API_VERSION = 'v3'
 
 def get_authenticated_service():
   flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)
-  credentials = flow.run_console()
-  return build(API_SERVICE_NAME, API_VERSION, credentials = Credentials.from_authorized_user_file(CLIENT_SECRETS_FILE,SCOPES))
+  credentials = flow.run_local_server(port=0)
+  return build(API_SERVICE_NAME, API_VERSION, credentials)
 
 def channels_list_by_username(service, **kwargs):
   results = service.channels().list(
